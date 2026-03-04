@@ -2,12 +2,8 @@ import json
 from pathlib import Path
 from datetime import datetime
 
-try:
-    from app.models.book import Book
-    from app.models.member import Member
-except ModuleNotFoundError:
-    from models.book import Book
-    from models.member import Member
+from app.models.book import Book
+from app.models.member import Member
 
 
 class LibraryManager:
