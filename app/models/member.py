@@ -15,7 +15,7 @@ class Member:
         self.password_salt = password_salt
         self.password_hash = password_hash
         self.borrowed_books = []  # List to store Book objects
-        self.history = []         # List to store titles of books ever borrowed
+        self.borrow_history = []  # List to store titles of books ever borrowed
         self.return_history = []  # List to store titles of books returned
 
     def can_borrow(self) -> bool:

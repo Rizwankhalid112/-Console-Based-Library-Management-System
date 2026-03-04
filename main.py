@@ -1,7 +1,12 @@
 from pathlib import Path
 
 from app.services.library_manager import LibraryManager
-from app.utils.helpers import prompt_int, prompt_member_name, prompt_non_empty, prompt_password
+from app.utils.helpers import (
+    prompt_int_or_back,
+    prompt_member_name_or_back,
+    prompt_non_empty_or_back,
+    prompt_password_or_back,
+)
 
 
 def print_menu() -> None:
@@ -14,6 +19,8 @@ def print_menu() -> None:
     print("6. Return book")
     print("7. View borrowed books for a member")
     print("8. View returned books history for a member")
+    print("9. View specific member details (by ID)")
+    print("10. View borrowed books for specific member (by ID)")
     print("0. Exit")
 
 
@@ -30,16 +37,24 @@ def authenticate_or_register(manager: LibraryManager):
         choice = input("Select an option: ").strip()
 
         if choice == "1":
-            member_id = prompt_int("Member ID: ")
-            password = prompt_password("Password: ")
+            member_id = prompt_int_or_back("Member ID")
+            if member_id is None:
+                continue
+            password = prompt_password_or_back("Password")
+            if password is None:
+                continue
             member = manager.authenticate_member(member_id, password)
             if member:
                 print(f"Login successful. Welcome, {member.name}.")
                 return member
             print("Error: Invalid Member ID or password.")
         elif choice == "2":
-            name = prompt_member_name("Name: ")
-            password = prompt_password("Set password: ")
+            name = prompt_member_name_or_back("Name")
+            if name is None:
+                continue
+            password = prompt_password_or_back("Set password")
+            if password is None:
+                continue
             member_id = manager.register_member(name, password)
             print(f"Registration successful. Your Member ID is: {member_id}")
             print("Please login using your Member ID and password.")
@@ -65,9 +80,16 @@ def show_member_details(manager: LibraryManager, member_id: int) -> None:
         print("Error: Member not found.")
         return
     print(f"\nMember: {member}")
-    if member.history:
+    if member.borrowed_books:
+        print("Currently borrowed books:")
+        for book in member.borrowed_books:
+            print(f"- ID: {book.id} | Title: {book.title}")
+    else:
+        print("Currently borrowed books: None")
+
+    if member.borrow_history:
         print("Borrow history:")
-        for title in member.history:
+        for title in member.borrow_history:
             print(f"- {title}")
     else:
         print("Borrow history: None")
@@ -106,6 +128,20 @@ def show_member_return_history(manager: LibraryManager, member_id: int) -> None:
         print(f"- {title}")
 
 
+def show_specific_member_details(manager: LibraryManager) -> None:
+    member_id = prompt_int_or_back("Member ID")
+    if member_id is None:
+        return
+    show_member_details(manager, member_id)
+
+
+def show_specific_member_borrowed_books(manager: LibraryManager) -> None:
+    member_id = prompt_int_or_back("Member ID")
+    if member_id is None:
+        return
+    show_member_borrowed_books(manager, member_id)
+
+
 def run() -> None:
     db_path = Path(__file__).resolve().parent / "data" / "library_db.json"
     manager = LibraryManager(str(db_path))
@@ -120,27 +156,41 @@ def run() -> None:
         choice = input("Select an option: ").strip()
 
         if choice == "1":
-            title = prompt_non_empty("Book title: ")
-            author = prompt_non_empty("Author: ")
+            title = prompt_non_empty_or_back("Book title")
+            if title is None:
+                continue
+            author = prompt_non_empty_or_back("Author")
+            if author is None:
+                continue
             book_id = manager.add_book(title, author)
             print(f"Book added with ID: {book_id}")
         elif choice == "2":
-            book_id = prompt_int("Book ID to remove: ")
+            book_id = prompt_int_or_back("Book ID to remove")
+            if book_id is None:
+                continue
             print(manager.remove_book(book_id))
         elif choice == "3":
             list_available_books(manager)
         elif choice == "4":
             show_member_details(manager, current_member_id)
         elif choice == "5":
-            book_id = prompt_int("Book ID: ")
+            book_id = prompt_int_or_back("Book ID")
+            if book_id is None:
+                continue
             print(manager.borrow_book(current_member_id, book_id))
         elif choice == "6":
-            book_id = prompt_int("Book ID: ")
+            book_id = prompt_int_or_back("Book ID")
+            if book_id is None:
+                continue
             print(manager.return_book(current_member_id, book_id))
         elif choice == "7":
             show_member_borrowed_books(manager, current_member_id)
         elif choice == "8":
             show_member_return_history(manager, current_member_id)
+        elif choice == "9":
+            show_specific_member_details(manager)
+        elif choice == "10":
+            show_specific_member_borrowed_books(manager)
         elif choice == "0":
             print("Exiting.")
             break

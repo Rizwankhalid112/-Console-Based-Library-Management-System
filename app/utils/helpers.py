@@ -40,3 +40,52 @@ def prompt_member_name(message: str) -> str:
             print("Please enter a valid name.")
             continue
         return normalized
+
+
+def prompt_non_empty_or_back(message: str):
+    while True:
+        value = input(f"{message} (or 'b' to go back): ").strip()
+        if value.lower() == "b":
+            return None
+        if value:
+            return value
+        print("Input cannot be empty.")
+
+
+def prompt_int_or_back(message: str):
+    while True:
+        raw_value = input(f"{message} (or 'b' to go back): ").strip()
+        if raw_value.lower() == "b":
+            return None
+        try:
+            return int(raw_value)
+        except ValueError:
+            print("Please enter a valid integer.")
+
+
+def prompt_password_or_back(message: str):
+    while True:
+        value = input(f"{message} (or 'b' to go back): ").strip()
+        if value.lower() == "b":
+            return None
+        if value:
+            return value
+        print("Password cannot be empty.")
+
+
+def prompt_member_name_or_back(message: str):
+    while True:
+        value = input(f"{message} (or 'b' to go back): ").strip()
+        if value.lower() == "b":
+            return None
+        normalized = " ".join(value.split())
+        if len(normalized) < 2:
+            print("Please enter a valid name (at least 2 letters).")
+            continue
+        if not re.fullmatch(r"[A-Za-z][A-Za-z\s'-]*", normalized):
+            print("Name can contain letters, spaces, apostrophes, and hyphens only.")
+            continue
+        if not any(char.isalpha() for char in normalized):
+            print("Please enter a valid name.")
+            continue
+        return normalized
