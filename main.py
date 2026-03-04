@@ -9,6 +9,14 @@ from app.utils.helpers import (
 )
 
 
+
+def print_auth_menu() -> None:
+    print("\n=== Member Access ===")
+    print("1. Login")
+    print("2. Register")
+    print("0. Exit")
+
+
 def print_menu() -> None:
     print("\n=== Library Management System ===")
     print("1. Add book")
@@ -24,11 +32,6 @@ def print_menu() -> None:
     print("0. Exit")
 
 
-def print_auth_menu() -> None:
-    print("\n=== Member Access ===")
-    print("1. Login")
-    print("2. Register")
-    print("0. Exit")
 
 
 def authenticate_or_register(manager: LibraryManager):
