@@ -96,7 +96,7 @@ class LibraryManager:
         if not member.can_borrow():
             return "Error: Member has reached the limit of 3 books."
 
-        # Process borrowing
+
         book.is_borrowed = True
         member.borrowed_books.append(book)
         member.borrow_history.append(book.title)
@@ -108,7 +108,7 @@ class LibraryManager:
         if not member:
             return "Error: Member not found."
 
-        # Remove all matching entries to avoid stale duplicates in inconsistent JSON data.
+
         matching_books = [book for book in member.borrowed_books if book.id == book_id]
         if matching_books:
             for book in matching_books:

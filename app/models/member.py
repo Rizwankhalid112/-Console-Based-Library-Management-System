@@ -14,9 +14,9 @@ class Member:
         self.name = name
         self.password_salt = password_salt
         self.password_hash = password_hash
-        self.borrowed_books = []  # List to store Book objects
-        self.borrow_history = []  # List to store titles of books ever borrowed
-        self.return_history = []  # List to store titles of books returned
+        self.borrowed_books = []
+        self.borrow_history = []
+        self.return_history = []
 
     def can_borrow(self) -> bool:
         return len(self.borrowed_books) < 3
