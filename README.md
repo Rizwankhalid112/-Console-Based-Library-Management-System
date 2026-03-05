@@ -1,46 +1,38 @@
 # Console-Based Library Management System
 
-A modular Library Management System built with Python and a JSON file as storage.
+A robust, modular, and Object-Oriented Library Management System built with Python. This project demonstrates clean code practices, separation of concerns, and secure data persistence using JSON, without the need for external databases.
 
-## Features
+## 🚀 Features
 
-- Member register/login with auto-generated member IDs
-- Passwords stored as salted hashes (PBKDF2-HMAC-SHA256)
-- Add and remove books with auto-generated book IDs
-- Borrow and return books with rule checks
-- View available books
-- View member details, borrowed books, and return history
-- Back navigation (`b`) in input flows
-- Automatic `data/` + `library_db.json` creation on first run
-- Corrupt JSON backup and safe recovery
+### **Security & Persistence**
+* **Secure Authentication:** Passwords are never stored in plain text; they use salted hashes (PBKDF2-HMAC-SHA256).
+* **JSON Storage:** Automatic creation of `data/library_db.json` with built-in corruption recovery and backups.
+* **Session Management:** Member login/register flow with persistent session IDs.
 
-## Rules Enforced
+### **Book Management**
+* **Inventory Control:** Add and remove books with auto-generated unique IDs.
+* **Availability Tracking:** Real-time status updates (Available vs. Borrowed).
+* **Search & View:** Easily list all available books in the library.
 
-- A book cannot be borrowed if already borrowed
-- A member cannot borrow more than 3 books at a time
-- Returning a book updates availability immediately
-- Borrow and return history are persisted
+### **Member Management**
+* **Borrowing Rules:** Enforces a strict limit of **3 books** per member.
+* **History Tracking:** Comprehensive logs for both borrowed and returned books.
+* **UX Navigation:** Integrated "Back" navigation (`b`) in all input prompts for a smooth CLI experience.
 
-## Project Structure
+---
+
+## 🏗️ Project Structure
+
+The project follows a professional N-tier modular architecture:
 
 ```text
 Library_Management_System/
 ├── app/
-│   ├── models/
-│   │   ├── book.py
-│   │   └── member.py
-│   ├── services/
-│   │   └── library_manager.py
-│   └── utils/
-│       └── helpers.py
-├── main.py
-├── data/
-│   └── library_db.json
-└── README.md
-```
-
-## Run
-
-```bash
-python3 main.py
-```
+│   ├── models/          # Data structures & Security logic (Book, Member)
+│   ├── services/        # Business logic & Persistence (LibraryManager)
+│   ├── utils/           # Input validation & Regex helpers
+│   └── main.py          # Entry point & CLI Controller
+├── data/                # Local JSON database storage
+├── .gitignore           # Git exclusion rules
+├── requirements.txt     # Dependency list
+└── README.md            # Documentation
