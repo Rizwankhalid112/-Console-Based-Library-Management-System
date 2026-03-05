@@ -1,37 +1,38 @@
 # Console-Based Library Management System
 
-A robust, modular, and Object-Oriented Library Management System built with Python. This project demonstrates clean code practices, separation of concerns, and efficient data management without the use of external libraries or databases.
+A robust, modular, and Object-Oriented Library Management System built with Python. This project demonstrates clean code practices, separation of concerns, and secure data persistence using JSON, without the need for external databases.
 
 ## 🚀 Features
 
+### **Security & Persistence**
+* **Secure Authentication:** Passwords are never stored in plain text; they use salted hashes (PBKDF2-HMAC-SHA256).
+* **JSON Storage:** Automatic creation of `data/library_db.json` with built-in corruption recovery and backups.
+* **Session Management:** Member login/register flow with persistent session IDs.
+
 ### **Book Management**
-* **Add/Remove Books:** Dynamically manage the library inventory.
-* **Availability Tracking:** Real-time updates on whether a book is available or borrowed.
-* **Unique Identification:** Auto-generated unique IDs for every book.
+* **Inventory Control:** Add and remove books with auto-generated unique IDs.
+* **Availability Tracking:** Real-time status updates (Available vs. Borrowed).
+* **Search & View:** Easily list all available books in the library.
 
 ### **Member Management**
-* **Registration:** Register new members with unique system IDs.
-* **Borrowing Limits:** Enforces a strict rule of maximum **3 books** per member.
-* **Borrow History:** Tracks every book a member has interacted with.
-
-### **System Rules**
-* Prevents borrowing of already borrowed books.
-* Automated ID generation for Books and Members.
-* Comprehensive console-based interactive menu.
+* **Borrowing Rules:** Enforces a strict limit of **3 books** per member.
+* **History Tracking:** Comprehensive logs for both borrowed and returned books.
+* **UX Navigation:** Integrated "Back" navigation (`b`) in all input prompts for a smooth CLI experience.
 
 ---
 
 ## 🏗️ Project Structure
 
-The project follows a professional modular structure:
+The project follows a professional N-tier modular architecture:
 
 ```text
 Library_Management_System/
 ├── app/
-│   ├── models/          # Data structures (Book, Member)
-│   ├── services/        # Business logic (LibraryManager)
-│   ├── utils/           # Helper functions
-│   └── main.py          # Entry point & CLI Menu
+│   ├── models/          # Data structures & Security logic (Book, Member)
+│   ├── services/        # Business logic & Persistence (LibraryManager)
+│   ├── utils/           # Input validation & Regex helpers
+│   └── main.py          # Entry point & CLI Controller
+├── data/                # Local JSON database storage
 ├── .gitignore           # Git exclusion rules
-├── requirements.txt     # Dependency list (Standard practice)
+├── requirements.txt     # Dependency list
 └── README.md            # Documentation

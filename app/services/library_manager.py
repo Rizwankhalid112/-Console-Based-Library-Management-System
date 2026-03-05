@@ -2,12 +2,8 @@ import json
 from pathlib import Path
 from datetime import datetime
 
-try:
-    from app.models.book import Book
-    from app.models.member import Member
-except ModuleNotFoundError:
-    from models.book import Book
-    from models.member import Member
+from app.models.book import Book
+from app.models.member import Member
 
 
 class LibraryManager:
@@ -100,10 +96,10 @@ class LibraryManager:
         if not member.can_borrow():
             return "Error: Member has reached the limit of 3 books."
 
-        # Process borrowing
+
         book.is_borrowed = True
         member.borrowed_books.append(book)
-        member.history.append(book.title)
+        member.borrow_history.append(book.title)
         self.save_db()
         return f"Success: {member.name} borrowed '{book.title}'"
 
@@ -112,14 +108,15 @@ class LibraryManager:
         if not member:
             return "Error: Member not found."
 
-        # Find the book in member's list
-        for book in member.borrowed_books:
-            if book.id == book_id:
+
+        matching_books = [book for book in member.borrowed_books if book.id == book_id]
+        if matching_books:
+            for book in matching_books:
                 book.is_borrowed = False
-                member.borrowed_books.remove(book)
-                member.return_history.append(book.title)
-                self.save_db()
-                return f"Success: '{book.title}' returned."
+            member.borrowed_books = [book for book in member.borrowed_books if book.id != book_id]
+            member.return_history.append(matching_books[0].title)
+            self.save_db()
+            return f"Success: '{matching_books[0].title}' returned."
 
         return "Error: This member does not have this book."
 
@@ -144,7 +141,7 @@ class LibraryManager:
                     "password_salt": member.password_salt,
                     "password_hash": member.password_hash,
                     "borrowed_book_ids": [book.id for book in member.borrowed_books],
-                    "history": member.history,
+                    "borrow_history": member.borrow_history,
                     "return_history": member.return_history,
                 }
                 for member in self.members.values()
@@ -184,7 +181,7 @@ class LibraryManager:
                 member_data.get("password_salt", ""),
                 member_data.get("password_hash", ""),
             )
-            member.history = member_data.get("history", [])
+            member.borrow_history = member_data.get("borrow_history", member_data.get("history", []))
             member.return_history = member_data.get("return_history", [])
             member.borrowed_books = [
                 self.books[book_id]
